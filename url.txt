@@ -1,1 +1,1 @@
-https://task-tech-thirty-strips.trycloudflare.com
+https://api.trycloudflare.com
