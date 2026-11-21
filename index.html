@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MC-бот</title>
+<style>body{font:16px system-ui,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;color:#888;text-align:center;padding:16px}</style></head>
+<body><div id="m">Подключаюсь к боту…</div>
+<script>
+// Постоянная страница-переходник. Бот пишет свой текущий адрес в url.txt этого же репозитория.
+// Владелец и репозиторий берутся из адреса страницы (твойник.github.io/репозиторий/) — править ничего не нужно.
+var owner = location.hostname.split('.')[0];
+var repo = location.pathname.split('/').filter(Boolean)[0] || (owner + '.github.io');
+var REPO = owner + '/' + repo, FILE = 'url.txt';
+fetch('https://api.github.com/repos/' + REPO + '/contents/' + FILE, { headers: { Accept: 'application/vnd.github.raw' }, cache: 'no-store' })
+  .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+  .then(function (t) {
+    var u = t.trim().replace(/\/+$/, '');
+    if (!/^https:\/\//.test(u)) throw new Error('нет адреса');
+    // hash (tgWebAppData…) сохраняем — Telegram передаёт в нём данные запуска
+    location.replace(u + '/' + location.search + location.hash);
+  })
+  .catch(function (e) { document.getElementById('m').textContent = 'Бот сейчас не в сети (' + e.message + '). Запусти бота и открой снова.'; });
+</script></body></html>
