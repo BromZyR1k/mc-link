@@ -13,9 +13,9 @@ fetch('https://api.github.com/repos/' + REPO + '/contents/' + FILE, { headers: {
   .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
   .then(function (t) {
     var u = t.trim().replace(/\/+$/, '');
-    if (!/^https:\/\//.test(u)) throw new Error('нет адреса');
+    if (!/^https:\/\/[a-z0-9-]+\.trycloudflare\.com$/.test(u) || /^https:\/\/api\./.test(u)) throw new Error('адрес туннеля устарел или не создан');
     // hash (tgWebAppData…) сохраняем — Telegram передаёт в нём данные запуска
     location.replace(u + '/' + location.search + location.hash);
   })
-  .catch(function (e) { document.getElementById('m').textContent = 'Бот сейчас не в сети (' + e.message + '). Запусти бота и открой снова.'; });
+  .catch(function (e) { document.getElementById('m').innerHTML = 'Бот сейчас не в сети (' + e.message + ').<br>Запусти бота, подожди ~30 секунд и открой снова.<br><br><button onclick="location.reload()" style="font:inherit;padding:8px 16px">Повторить</button>'; });
 </script></body></html>
