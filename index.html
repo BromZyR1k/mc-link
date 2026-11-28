@@ -40,15 +40,8 @@ Promise.all(SOURCES.map(function (s) { return read(s).catch(function (e) { errs.
   })
   .then(function (u) {
     document.getElementById('m').textContent = 'Открываю…';
-    try { sessionStorage.removeItem('mcRetry'); } catch (x) {}
     // hash (tgWebAppData…) сохраняем — Telegram передаёт в нём данные запуска
     location.replace(u + '/' + location.search + location.hash);
   })
-  .catch(function (e) {
-    // туннель мог только что смениться (бот перезапустился) — пару раз пробуем сами, без кнопки
-    var n = 0; try { n = +sessionStorage.getItem('mcRetry') || 0; sessionStorage.setItem('mcRetry', n + 1); } catch (x) {}
-    var auto = n < 6;
-    document.getElementById('m').innerHTML = 'Бот сейчас не в сети (' + e.message + ').<br>' + (auto ? 'Пробую ещё раз через 8 секунд…' : 'Запусти бота, подожди ~30 секунд и открой снова.') + '<br><br><button onclick="location.reload()" style="font:inherit;padding:8px 16px">Повторить</button>';
-    if (auto) setTimeout(function () { location.reload(); }, 8000);
-  });
+  .catch(function (e) { document.getElementById('m').innerHTML = 'Бот сейчас не в сети (' + e.message + ').<br>Запусти бота, подожди ~30 секунд и открой снова.<br><br><button onclick="location.reload()" style="font:inherit;padding:8px 16px">Повторить</button>'; });
 </script></body></html>
